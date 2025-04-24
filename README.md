@@ -1,7 +1,6 @@
 # GameCompass
 - Una app de videojuegos
-
-  ```swift
+```swift
 import SwiftUI
 import FirebaseCore
 
@@ -26,6 +25,4 @@ struct YourApp: App {
       }
     }
   }
-}
-
-```
+}```
