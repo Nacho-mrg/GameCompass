@@ -2,14 +2,6 @@
 - Una app de videojuegos
 
   ```swift
-  //
-//  AppDelegate.swift
-//  TCG
-//
-//  Created by Ignacio on 3/4/25.
-//
-
-
 import SwiftUI
 import FirebaseCore
 
@@ -36,4 +28,4 @@ struct YourApp: App {
   }
 }
 
-  ```
+```
