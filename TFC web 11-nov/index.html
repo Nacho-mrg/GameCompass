@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromoApp - La mejor app para ti</title>
+  
+  <link rel="stylesheet" href="styles.css" />
+
+  <script src="https://www.google.com/recaptcha/enterprise.js?render=6Ldz8PUrAAAAABSiLwozx90aZGh3qEIoWcwOjQNo"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-container">
+      <a href="#" class="logo-link">
+        <img src="logo.jpg" alt="PromoApp Logo" class="logo" />
+      </a>
+
+      <nav class="nav">
+        <div id="google_translate_element"></div>
+        
+        <a href="#features" class="nav-link">Características</a>
+        <a href="#download" class="nav-link">Descargar</a>
+        <a href="#contact" class="nav-link">Contacto</a>
+
+        <button id="headerLoginBtn" class="btn btn-primary">Iniciar sesión</button>
+        
+        <div id="headerProfileContainer" class="hidden">
+          <img id="headerProfilePhoto" src="" alt="Perfil">
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-section" id="home">
+      <div class="container hero-container">
+        <div class="hero-content">
+          <h1>La mejor aplicación para Gamers</h1>
+          <p>Mira tus noticias, obtén recomendaciones y mantente al día de todo.</p>
+
+          <button id="getStartedBtn" class="btn btn-primary">Empieza ahora</button>
+
+          <p id="welcomeMessage" class="welcome-message hidden"></p>
+
+          <button id="goToGameViewBtn" class="btn btn-accent hidden" style="margin-left:8px;">Ir a GameView</button>
+        </div>
+
+        <div class="hero-image-wrapper">
+          <img src="logo.jpg" alt="Demo App" class="hero-image" />
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features-section">
+      <div class="container">
+        <h2 class="section-title">Características destacadas</h2>
+        <div class="features-grid">
+          <article class="feature-card">
+            <img src="foto1.jpg" alt="Interfaz amigable" class="feature-icon" />
+            <h3>Interfaz amigable</h3>
+            <p>Diseño intuitivo y limpio para que navegar por la app sea un placer.</p>
+          </article>
+          <article class="feature-card">
+            <img src="foto2.jpg" alt="Noticias en tiempo real" class="feature-icon" />
+            <h3>Noticias en tiempo real</h3>
+            <p>Accede a noticias y giveaways de múltiples juegos.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="download" class="download-section">
+      <div class="container download-container">
+        <h2 class="section-title">Descarga la app</h2>
+        <p>Disponible para iOS y Android. ¡Disfruta la mejor experiencia móvil ahora!</p>
+        <div class="download-buttons">
+          <a href="#" class="btn btn-ios">App Store</a>
+          <a href="#" class="btn btn-android">Google Play</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact" class="footer">
+    <div class="container footer-container">
+      <p>© 2025 GameCompass. Contacto: <a href="mailto:gamecompass@gm.com">gamecompass@gm.com</a></p>
+    </div>
+  </footer>
+
+  <div id="loginModal" class="hidden" aria-hidden="true" role="dialog">
+    <div class="modal-overlay"></div>
+    <div class="modal-content container" role="document">
+      <button id="modalCloseBtn" >X</button>
+      <h2>Inicia sesión</h2>
+      <p>Accede con tu cuenta para continuar</p>
+
+      <button id="googleLoginBtn" class="btn btn-primary" style="display:block; width:100%;">Continuar con Google</button>
+
+      <div style="margin:12px 0; text-align:center;"></div>
+
+      <form id="emailLoginForm" style="display:block;">
+        <input id="emailInput" name="email" type="email" placeholder="Correo electrónico" required class="input" />
+        <input id="passwordInput" name="password" type="password" placeholder="Contraseña" required class="input" />
+        <div style="margin-top:8px;">
+          <button type="submit" class="btn btn-primary" style="margin-right:8px;">Entrar</button>
+          <button id="registerBtn" type="button" class="btn btn-secondary">Registrarse</button>
+        </div>
+      </form>
+
+      <div id="loginError" class="hidden" style="margin-top:10px;color:red;"></div>
+    </div>
+  </div>
+  
+  <div id="userInfoModal" class="hidden" aria-hidden="true" role="dialog">
+    <div class="modal-overlay"></div>
+    <div class="modal-content container" role="document">
+      <button id="userInfoModalCloseBtn" >X</button>
+      <h2>Tu Perfil</h2>
+      
+      <div style="text-align:center; margin-bottom: 20px;">
+        <img id="profilePhotoDisplay" src="" alt="Foto de Perfil" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #3498db; margin-bottom: 10px;">
+
+        <input type="file" id="photoFileInput" accept="image/*" style="display: none;">
+        
+        <button id="changePhotoBtn" class="btn btn-secondary btn-sm">Cambiar Foto</button>
+
+        <button id="removePhotoBtn" class="btn btn-secondary btn-sm hidden" style="background-color: #e74c3c; margin-left: 5px;">Quitar Foto</button>
+      </div>
+
+      <div style="margin-top: 15px; background-color: #f7f7f7; padding: 10px; border-radius: 5px; text-align: left;">
+        <p><strong>Email:</strong> <span id="userEmailDisplay"></span></p>
+        <p><strong>UID:</strong> <span id="userUIDDisplay"></span></p>
+      </div>
+      <div id="profileError" style="margin-top:10px;color:red; text-align:center;" class="hidden"></div>
+
+      <button id="logoutBtn" class="btn btn-secondary" style="margin-top: 20px; background-color: #d9534f; color: white; width: auto;">Cerrar sesión</button>
+
+    </div>
+  </div>
+
+  <script>
+//Script de inicialización de Google Translate
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'es', // El idioma original de tu página
+      layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+    }, 'google_translate_element');
+  }
+
+//Carga del script de Google Translate
+const translateScript = document.createElement('script');
+translateScript.type = 'text/javascript';
+translateScript.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+document.head.appendChild(translateScript);
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const firebaseConfig = {
+    apiKey: "AIzaSyD_2rTwWM5hdH0iNFGoN0Ljbg87JT7J0Ck",
+    authDomain: "tfc-nacho.firebaseapp.com",
+    projectId: "tfc-nacho",
+    storageBucket: "tfc-nacho.firebasestorage.app",
+    messagingSenderId: "45085403130",
+    appId: "1:45085403130:web:REEMPLAZA_APP_ID"
+  };
+
+  try { if (!firebase.apps.length) firebase.initializeApp(firebaseConfig); } catch(e){}
+
+  const auth = firebase.auth();
+  const provider = new firebase.auth.GoogleAuthProvider();
+  const storage = firebase.storage();
+  const DEFAULT_PHOTO_URL = 'https://i.imgur.com/rN5H53y.png'; 
+
+  // Constantes
+  const headerLoginBtn = document.getElementById("headerLoginBtn");
+  const getStartedBtn = document.getElementById("getStartedBtn");
+  const loginModal = document.getElementById("loginModal");
+  const modalCloseBtn = document.getElementById("modalCloseBtn");
+  const googleLoginBtn = document.getElementById("googleLoginBtn");
+  const logoutBtn = document.getElementById("logoutBtn"); // Ahora dentro de userInfoModal
+  const welcomeMessage = document.getElementById("welcomeMessage");
+  const modalOverlay = loginModal.querySelector(".modal-overlay");
+  const emailLoginForm = document.getElementById("emailLoginForm");
+  const emailInput = document.getElementById("emailInput");
+  const passwordInput = document.getElementById("passwordInput");
+  const registerBtn = document.getElementById("registerBtn");
+  const loginError = document.getElementById("loginError");
+  const goToGameViewBtn = document.getElementById("goToGameViewBtn");
+
+  // CONSTANTES DEL HEADER
+  const headerProfileContainer = document.getElementById("headerProfileContainer");
+  const headerProfilePhoto = document.getElementById("headerProfilePhoto");
+
+  // CONSTANTES PARA EL MODAL DE PERFIL Y FOTO
+  const userInfoModal = document.getElementById("userInfoModal");
+  const userInfoModalCloseBtn = document.getElementById("userInfoModalCloseBtn");
+  const userEmailDisplay = document.getElementById("userEmailDisplay");
+  const userUIDDisplay = document.getElementById("userUIDDisplay");
+  const userInfoModalOverlay = userInfoModal.querySelector(".modal-overlay");
+  const profilePhotoDisplay = document.getElementById("profilePhotoDisplay");
+  const photoFileInput = document.getElementById("photoFileInput");
+  const changePhotoBtn = document.getElementById("changePhotoBtn");
+  const removePhotoBtn = document.getElementById("removePhotoBtn");
+  const profileError = document.getElementById("profileError");
+  
+
+  const openModal = () => { loginModal.classList.remove("hidden"); loginModal.setAttribute("aria-hidden","false"); };
+  const closeModal = () => { loginModal.classList.add("hidden"); loginModal.setAttribute("aria-hidden","true"); loginError.classList.add("hidden"); emailLoginForm.reset(); };
+
+  // FUNCIONES DEL MODAL DE PERFIL
+  const openUserInfoModal = (user) => { 
+    userEmailDisplay.textContent = user.email || "No disponible";
+    userUIDDisplay.textContent = user.uid;
+    
+    const photoURL = user.photoURL || DEFAULT_PHOTO_URL;
+    profilePhotoDisplay.src = photoURL;
+    
+    if(user.photoURL) {
+      removePhotoBtn.classList.remove("hidden");
+    } else {
+      removePhotoBtn.classList.add("hidden");
+    }
+
+    userInfoModal.classList.remove("hidden"); 
+    userInfoModal.setAttribute("aria-hidden","false"); 
+    profileError.classList.add("hidden");
+  };
+  const closeUserInfoModal = () => { 
+    userInfoModal.classList.add("hidden"); 
+    userInfoModal.setAttribute("aria-hidden","true"); 
+    photoFileInput.value = ''; 
+  };
+
+  // FUNCIÓN PARA SUBIR Y ACTUALIZAR FOTO
+  const updateProfilePhoto = async (file) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    
+    profileError.classList.add("hidden");
+    
+    try {
+      if (file) {
+        // 1. Subir la imagen a Firebase Storage
+        const storageRef = storage.ref(`profile_pictures/${user.uid}`);
+        const snapshot = await storageRef.put(file);
+        const photoURL = await snapshot.ref.getDownloadURL();
+        
+        // 2. Actualizar el perfil del usuario
+        await user.updateProfile({ photoURL: photoURL });
+      } else {
+        // 1. Si no hay archivo (quitar foto), borrar de Storage (si existe)
+        const storageRef = storage.ref(`profile_pictures/${user.uid}`);
+        try { await storageRef.delete(); } catch(e) { /* Ignorar error si no existe */ }
+        
+        // 2. Quitar la URL de Firebase Auth
+        await user.updateProfile({ photoURL: null });
+      }
+
+      // ACTUALIZAR AMBAS FOTOS DESPUÉS DE LA OPERACIÓN
+      const newPhotoURL = auth.currentUser.photoURL || DEFAULT_PHOTO_URL;
+      profilePhotoDisplay.src = newPhotoURL;
+      headerProfilePhoto.src = newPhotoURL;
+
+      // Recargar la información del modal
+      openUserInfoModal(auth.currentUser);
+    } catch (error) {
+      console.error("Error al actualizar la foto de perfil:", error);
+      profileError.textContent = "Error al actualizar la foto: " + error.message;
+      profileError.classList.remove("hidden");
+    }
+  };
+
+  // Event Listeners
+  headerLoginBtn.addEventListener("click", openModal);
+  getStartedBtn.addEventListener("click", openModal);
+  modalCloseBtn.addEventListener("click", closeModal);
+  modalOverlay.addEventListener("click", closeModal);
+  
+  userInfoModalCloseBtn.addEventListener("click", closeUserInfoModal);
+  userInfoModalOverlay.addEventListener("click", closeUserInfoModal);
+
+  document.addEventListener("keydown", e => { 
+    if(e.key==="Escape"){
+      if(!loginModal.classList.contains("hidden")) closeModal();
+      if(!userInfoModal.classList.contains("hidden")) closeUserInfoModal();
+    }
+  });
+
+  googleLoginBtn.addEventListener("click", async () => {
+    googleLoginBtn.disabled=true;
+    try { await auth.signInWithPopup(provider); closeModal(); }
+    catch(err){ loginError.classList.remove("hidden"); loginError.textContent = err.message || "Error al iniciar sesión con Google"; }
+    finally{ googleLoginBtn.disabled=false; }
+  });
+
+  emailLoginForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    try { await auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value); closeModal(); }
+    catch(err){ loginError.classList.remove("hidden"); loginError.textContent = err.message || "Error al iniciar sesión"; }
+  });
+
+  registerBtn.addEventListener("click", async () => {
+    try { await auth.createUserWithEmailAndPassword(emailInput.value, passwordInput.value); closeModal(); }
+    catch(err){ loginError.classList.remove("hidden"); loginError.textContent = err.message || "Error al registrarse"; }
+  });
+
+  // Lógica de cerrar sesión: Mantenemos el listener, solo que el botón está ahora en el modal.
+  logoutBtn.addEventListener("click", async () => { 
+    try { 
+      await auth.signOut();
+      closeUserInfoModal(); // Cierra el modal de perfil al cerrar sesión
+    } catch(e){ 
+      console.error(e); 
+    } 
+  });
+
+  goToGameViewBtn.addEventListener("click", () => {
+    window.location.href = "gameView.html";
+  });
+
+  // GESTIÓN DE LA FOTO (Input y Botones)
+  changePhotoBtn.addEventListener('click', () => {
+    photoFileInput.click(); 
+  });
+
+  photoFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      updateProfilePhoto(file);
+    }
+  });
+  
+  removePhotoBtn.addEventListener('click', () => {
+    updateProfilePhoto(null);
+  });
+
+  // GESTIÓN DEL ESTADO DE AUTENTICACIÓN
+  auth.onAuthStateChanged(user => {
+    if(user){
+      // Lógica de HERO
+      welcomeMessage.textContent=`¡Bienvenido, ${user.displayName||user.email}!`;
+      welcomeMessage.classList.remove("hidden");
+      getStartedBtn.classList.add("hidden");
+      goToGameViewBtn.classList.remove("hidden");
+
+      // LÓGICA DEL HEADER: Mostrar foto, ocultar botón
+      headerLoginBtn.classList.add("hidden");
+      headerProfileContainer.classList.remove("hidden");
+      
+      // Cargar la foto de perfil en el header
+      headerProfilePhoto.src = user.photoURL || DEFAULT_PHOTO_URL;
+
+      // ASIGNAR EVENTO CLICK A LA FOTO DEL HEADER
+      headerProfilePhoto.onclick = () => openUserInfoModal(user);
+      
+      closeModal();
+    } else {
+      // Lógica de HERO
+      welcomeMessage.textContent="";
+      welcomeMessage.classList.add("hidden");
+      getStartedBtn.classList.remove("hidden");
+      goToGameViewBtn.classList.add("hidden");
+      
+      // LÓGICA DEL HEADER: Ocultar foto, mostrar botón
+      headerLoginBtn.classList.remove("hidden");
+      headerProfileContainer.classList.add("hidden");
+
+      closeUserInfoModal();
+    }
+  });
+});
+  </script>
+</body>
+</html>

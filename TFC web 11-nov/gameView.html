@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAWG - Listado de Juegos</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'es', // El idioma original de tu página
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE // Estilo del widget
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-container">
+      <a href="index.html" class="logo-link">
+        <img src="logo.jpg" alt="PromoApp Logo" class="logo" />
+      </a>
+      <nav class="nav">
+        <div id="google_translate_element"></div>
+        
+        <button id="backBtn" class="btn btn-secondary">Volver</button>
+        <button id="logoutBtn" class="btn btn-primary" style="margin-left:12px;">Cerrar sesión</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="features-section">
+      <h2 class="section-title">Juegos populares (RAWG API)</h2>
+
+      <div style="display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; margin-bottom:20px;">
+        <input id="searchInput" type="text" placeholder="Buscar juego..." 
+               style="padding:10px; border-radius:8px; border:1px solid #ccc; min-width:220px;"/>
+        
+        <select id="genreSelect" style="padding:10px; border-radius:8px; border:1px solid #ccc; min-width:180px;">
+          <option value="">Todos los géneros</option>
+        </select>
+
+        <button id="searchBtn" class="btn btn-primary">Buscar</button>
+      </div>
+
+      <div id="gamesContent" class="features-grid">
+        <p>Cargando juegos...</p>
+      </div>
+
+      <div style="text-align:center; margin-top:20px;">
+        <button id="loadMoreBtn" class="btn btn-primary">Cargar más</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-container">
+      <p>© 2025 GameCompass - RAWG API View</p>
+    </div>
+  </footer>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_2rTwWM5hdH0iNFGoN0Ljbg87JT7J0Ck",
+      authDomain: "tfc-nacho.firebaseapp.com",
+      projectId: "tfc-nacho",
+      storageBucket: "tfc-nacho.firebasestorage.app",
+      messagingSenderId: "45085403130",
+      appId: "1:45085403130:web:REEMPLAZA_APP_ID"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const gamesContent = document.getElementById("gamesContent");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const backBtn = document.getElementById("backBtn");
+    const loadMoreBtn = document.getElementById("loadMoreBtn");
+    const searchInput = document.getElementById("searchInput");
+    const genreSelect = document.getElementById("genreSelect");
+    const searchBtn = document.getElementById("searchBtn");
+
+    const RAWG_API_KEY = "b9355a95d4084728bb4486202b0a231e";
+    let currentPage = 1;
+    let currentQuery = "";
+    let currentGenre = "";
+    let isLoading = false;
+
+    async function loadGenres() {
+      try {
+        const res = await fetch(`https://api.rawg.io/api/genres?key=${RAWG_API_KEY}`);
+        const data = await res.json();
+        genreSelect.innerHTML = `<option value="">Todos los géneros</option>` + 
+          data.results.map(g => `<option value="${g.slug}">${g.name}</option>`).join("");
+      } catch (err) {
+        console.error("Error cargando géneros:", err);
+      }
+    }
+
+    async function loadGames(reset = false) {
+      if (isLoading) return;
+      isLoading = true;
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.textContent = "Cargando...";
+
+      if (reset) {
+        currentPage = 1;
+        gamesContent.innerHTML = "<p>Cargando juegos...</p>";
+      }
+
+      let url = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&page_size=12&page=${currentPage}`;
+      if (currentQuery) url += `&search=${encodeURIComponent(currentQuery)}`;
+      if (currentGenre) url += `&genres=${encodeURIComponent(currentGenre)}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        const html = data.results.map(game => `
+          <article class="feature-card" data-id="${game.id}" style="cursor:pointer;">
+            <img src="${game.background_image || 'logo.jpg'}" alt="${game.name}" class="feature-icon" />
+            <h3>${game.name}</h3>
+            <p>⭐ ${game.rating} | 🕹️ ${game.released || "Fecha desconocida"}</p>
+          </article>
+        `).join("");
+
+        if (currentPage === 1) {
+          gamesContent.innerHTML = html;
+        } else {
+          gamesContent.insertAdjacentHTML("beforeend", html);
+        }
+
+        // Click en cada juego para ver detalle
+        document.querySelectorAll(".feature-card").forEach(card => {
+          card.addEventListener("click", () => {
+            const id = card.getAttribute("data-id");
+            window.location.href = `game.html?id=${id}`;
+          });
+        });
+
+        currentPage++;
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.textContent = "Cargar más";
+        isLoading = false;
+
+      } catch (error) {
+        console.error(error);
+        gamesContent.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+        loadMoreBtn.textContent = "Error al cargar";
+      }
+    }
+
+    auth.onAuthStateChanged(async user => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+      await loadGenres();
+      await loadGames(true);
+    });
+
+    // Botones y eventos
+    loadMoreBtn.addEventListener("click", () => loadGames());
+    searchBtn.addEventListener("click", () => {
+      currentQuery = searchInput.value.trim();
+      loadGames(true);
+    });
+    genreSelect.addEventListener("change", () => {
+      currentGenre = genreSelect.value;
+      loadGames(true);
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await auth.signOut();
+      window.location.href = "index.html";
+    });
+    backBtn.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  });
+  </script>
+</body>
+</html>

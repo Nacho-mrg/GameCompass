@@ -1,0 +1,495 @@
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #1a1a1a;
+  background: #fff;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: #2575fc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #1c56d9;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  z-index: 999;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+}
+
+.logo {
+  height: 40px;
+  user-select: none;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: #2575fc;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after {
+  width: 100%;
+}
+
+/* 🔥 Estilos de la foto de perfil en el header (CORREGIDOS) */
+#headerProfileContainer {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+    /* Aseguramos que el contenedor tenga el mismo tamaño de la imagen si fuese necesario */
+    width: 44px; /* Un poco más grande para el borde */
+    height: 44px; /* Un poco más grande para el borde */
+    border-radius: 50%; /* Contenedor también redondo para prever */
+    overflow: hidden; /* Corta cualquier parte de la imagen que sobresalga */
+}
+
+#headerProfilePhoto {
+    width: 40px; /* Tamaño de la imagen */
+    height: 40px; /* Tamaño de la imagen */
+    border-radius: 50%; /* Para que sea redonda */
+    object-fit: cover; /* Para que la imagen cubra el área sin distorsionarse */
+    cursor: pointer;
+    border: 2px solid #2575fc; /* Borde con color primario */
+    /* Para centrar la imagen perfectamente dentro de un contenedor si su tamaño fuera diferente */
+    display: block; 
+    margin: auto; 
+}
+
+.nav #headerLoginBtn {
+    margin-left: 12px;
+}
+
+/* Spacer to compensate fixed header */
+main {
+  padding-top: 60px;
+}
+
+/* Hero Section */
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 0 5rem;
+  background: linear-gradient(135deg, #2575fc 10%, #6a11cb 90%);
+  color: white;
+}
+
+.hero-container {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.hero-content {
+  max-width: 520px;
+  flex: 1 1 400px;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #dce6ff;
+}
+
+/* Botones Generales */
+.btn {
+  padding: 0.95rem 2.5rem;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(255 255 255 / 0.6);
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  user-select: none;
+  border: none;
+}
+
+.btn-primary {
+  background-color: white;
+  color: #2575fc;
+  padding: 1rem 3rem; 
+  box-shadow: 0 8px 20px rgba(255 255 255 / 0.8);
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(255 255 255 / 1);
+}
+
+.btn-secondary {
+    background-color: #ecf0f1;
+    color: #333;
+    box-shadow: none;
+}
+
+.btn-secondary:hover {
+    background-color: #ccd0d3;
+    transform: scale(1.05);
+}
+
+/* 🔥 BOTÓN DE ACENTO (Ir a GameView) */
+.btn-accent {
+    background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%); 
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 6px 15px rgba(37, 117, 252, 0.4); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    padding: 1rem 3rem; 
+    border-radius: 30px;
+    width: auto !important; 
+}
+
+.btn-accent:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(37, 117, 252, 0.6);
+}
+/* Fin Botones */
+
+.welcome-message {
+  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #bbf2bb;
+  text-shadow: 0 0 8px rgba(255 255 255 / 0.7);
+}
+
+.hidden {
+  display: none !important; 
+}
+
+.hero-image-wrapper {
+  flex: 1 1 400px;
+  max-width: 480px;
+  animation: fadeInUp 1s ease 0.2s forwards;
+}
+
+.hero-image {
+  width: 100%;
+  border-radius: 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Features Section */
+.features-section {
+  padding: 5rem 0;
+  background: #f9faff;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.8rem;
+  margin-bottom: 3rem;
+  font-weight: 700;
+  color: #2575fc;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 25px;
+  box-shadow: 0 8px 30px rgba(37, 117, 252, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(37, 117, 252, 0.2);
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1.2rem;
+  user-select: none;
+}
+
+/* Download Section */
+.download-section {
+  background: #2575fc;
+  color: white;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.download-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.download-section p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.download-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn-ios {
+  background: #4a90e2;
+  color: white;
+}
+
+.btn-ios:hover {
+  background: #357abd;
+  transform: scale(1.05);
+}
+
+.btn-android {
+  background: #a4c639;
+  color: white;
+}
+
+.btn-android:hover {
+  background: #7ca32e;
+  transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+  background: #f9faff;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #555;
+  font-weight: 500;
+  font-size: 0.9rem;
+  border-top: 1px solid #ddd;
+}
+
+.footer a {
+  color: #2575fc;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-container {
+    flex-direction: column;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-image-wrapper {
+    max-width: 320px;
+  }
+
+  .nav {
+    gap: 1rem;
+  }
+}
+
+/*
+ * Estilos de Modales (Pop-ups con Backdrop Blur)
+ */
+
+#loginModal,
+#userInfoModal { 
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+#loginModal.hidden,
+#userInfoModal.hidden { 
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px); 
+  z-index: 1;
+}
+
+.modal-content {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  padding: 2rem;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.modal-content h2 {
+  color: #2575fc;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-content p {
+  color: #555;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.modal-content .input {
+  width: 100%;
+  padding: 0.9rem;
+  margin-bottom: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.modal-content .input:focus {
+  border-color: #2575fc;
+}
+
+.modal-content .btn {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Botones de Cierre */
+#modalCloseBtn,
+#userInfoModalCloseBtn { 
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #eee;
+  color: #333;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#modalCloseBtn:hover,
+#userInfoModalCloseBtn:hover { 
+  background: #ccc;
+}
+
+/* Estilos Específicos del Modal de Perfil */
+
+.btn-sm { 
+    width: auto !important;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    margin-top: 0;
+} 
+
+/*
+ * 🌎 Solución para el widget de Google Translate (Evita desbordamiento)
+ * Fuerza que el menú desplegable se abra hacia la izquierda.
+ */
+
+/* Este selector es crucial: apunta al marco del menú desplegable de idiomas */
+.goog-te-menu-frame {
+    /* Mueve el menú completamente a la izquierda del botón principal. */
+    left: auto !important; 
+    /* Alinea el borde derecho del menú con el borde derecho del botón (abre hacia la izquierda) */
+    right: 35px !important; 
+    
+    /* Asegura que el menú siempre esté por encima de otros elementos, como el header. */
+    z-index: 10000 !important; 
+}
+
